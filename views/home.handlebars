@@ -1,0 +1,163 @@
+<div class="app-title">
+    MINI BOT APP
+</div>
+
+<form class="body" method="POST" onsubmit="return validate(this);" onkeydown="showError('');" onclick="showError('');">
+    <div class="content">
+        <div class="content-scroll">
+            {{#each data}}
+            <div style="margin-top: 12px;" class="item">
+                <div class="order-number">
+                    {{offset @index}}.
+                    <input type="checkbox" title="Use"  {{#if use}}checked{{/if}} value="true" name="use">
+                    Qty: <input type="number" title="Quantity" value="{{qty}}" name="qty">
+                    <button type="button" onclick="onDelete(this);">Delete</button>
+                    <input type="checkbox" title="Auto close browser when finished"  {{#if autoClose}}checked{{/if}} value="true"
+                        name="autoClose"> Auto close the browser when finished
+                </div>
+                <div style="margin-left: 20px;" class="w-100"><input oninput="onInputSiteName(this);"
+                        class="input-text site-name" placeholder="Enter site name" name="siteName" value="{{name}}"></div>
+                <div style="margin-left: 20px;" class="w-100"><input placeholder="Enter site url (link)" class="input-text site-url" name="siteUrl"
+                        value="{{url}}"></div>
+                {{#each accounts}}
+                <div style="margin-left: 30px; align-items: baseline; " class="account">
+                    <button type="button" onclick="onRemoveAccount(this);">-</button> &nbsp;&nbsp;
+                    Username:&nbsp; <input placeholder="Enter username" name="{{../name}}--username" class="short-input-text" value="{{username}}">
+                    Password:&nbsp; <input placeholder="Enter password" name="{{../name}}--password" class="short-input-text" type="password"
+                        value="{{password}}">
+                </div>
+                {{/each}}
+                <button style="margin-left: 30px;  margin-top: 6px;" type="button" onclick="onAddAccount(this);">Add
+                    more Account</button>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    <div id="error">
+
+    </div>
+    <div class="control-button">
+        <button type="button" onclick="onAddNew();">
+            Add new Link
+        </button>
+
+        <button onclick="this.form.action='/save';">
+            Save Config
+        </button>
+
+        <button onclick="this.form.action='/run';">
+            Start
+        </button>
+
+        <button type="button" onclick="location.href='/';">
+            Reload
+        </button>
+    </div>
+</form>
+
+<script>
+    const validate = (_this) => {
+        if(_this.action.endsWith('/save')) {
+            return true;
+        }
+
+        let foundChecked = false;
+        const els = document.getElementsByName('use');
+        for(let i = 0; i < els.length; i++) {
+            if(els[i].checked) {
+                foundChecked = true;
+                break;
+            }
+        };
+
+        if(!foundChecked) {
+            showError('Nothing to run')
+        }
+        return foundChecked;
+    }
+
+    const onInputSiteName = (_this) => {
+        const item = _this.parentElement.parentElement;
+       
+        item.querySelectorAll('.short-input-text').forEach((el, index) => {
+            if (el.type === 'password') {
+                el.name = `${_this.value}--password`;
+            } else {
+                el.name = `${_this.value}--username`;
+            }
+
+        });
+    }
+
+    const onDelete = (_this) => {
+        const item = _this.parentElement.parentElement;
+        item && item.remove();
+        reOrderNumber();
+    }
+
+    const onRemoveAccount = (_this) => {
+        const item = _this.parentElement;
+        item && item.remove();
+
+    }
+
+    const onAddAccount = (_this) => {
+        const item = _this.parentElement;
+        _this.remove();
+
+        const prefix = item.querySelector('.site-name').value;
+
+        item.innerHTML += `<div style="margin-left: 30px; align-items: baseline;" class="account"> <button type="button" onclick="onRemoveAccount(this);">-</button> &nbsp;&nbsp;
+            Username: <input name="${prefix}--username" class="short-input-text" placeholder="Enter username" value="">
+            Password: <input name="${prefix}--password" class="short-input-text" type="password"
+            placeholder="Enter password" value=""> </div>`;
+        item.append(_this);
+
+    }
+
+    const onAddNew = () => {
+        const parent = document.querySelector('.content-scroll');
+        const nextIndex = document.querySelectorAll('.item').length + 1;
+
+        parent.innerHTML += `
+            <div style="margin-top: 12px;" class="item">
+                <div class="order-number">
+                    ${nextIndex}.
+                    <input type="checkbox" value="true" checked="true" name="use">
+                     Qty: <input type="number" title="Quantity" value="1" name="qty">
+                    <button type="button" onclick="onDelete(this);">Delete</button>
+                    <input type="checkbox" title="Auto close browser when finished" value="true" checked="true" name="autoClose"> Auto close the browser when finished
+                </div>
+                <div style="margin-left: 20px;" class="w-100"><input oninput="onInputSiteName(this);" class="input-text site-name" name="siteName"
+                        placeholder="Enter site name" value=""></div>
+                <div style="margin-left: 20px;" class="w-100"><input class="input-text site-url" name="siteUrl"
+                        placeholder="Enter url link" value=""></div>
+               
+                <div style="margin-left: 30px; align-items: baseline; " class="account">
+                    <button type="button" onclick="onRemoveAccount(this);">-</button> &nbsp;&nbsp;
+                    Username: <input name="username" class="short-input-text" placeholder="Enter username" value="">
+                    Password: <input name="password" class="short-input-text" type="password"
+                       placeholder="Enter password" value="">
+                </div>
+                <button style="margin-left: 30px; margin-top: 6px;" type="button" onclick="onAddAccount(this);">Add more Account</button>
+            </div>
+        `;
+
+        const els = document.getElementsByName('siteName');
+        if (els && els.length > nextIndex - 1) {
+            els[nextIndex - 1].focus();
+        }
+    }
+
+    const reOrderNumber = () => {
+        const orderEls = document.querySelectorAll('.order-number');
+        for (let i = 0; i < orderEls.length; i++) {
+            const innerHTML = orderEls[i].innerHTML;
+            orderEls[i].innerHTML = innerHTML.replace(/\d.*/, `${i + 1}. `)
+        }
+    }
+
+    const showError = (err) => {
+        document.querySelector('#error').innerHTML = err
+    }
+</script>

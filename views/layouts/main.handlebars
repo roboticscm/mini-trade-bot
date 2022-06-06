@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>Mini BOT App</title>
+    <style>
+        html,
+        body {
+            box-sizing: border-box;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            font-size: 13px;
+            padding: 20px;
+            background: wheat;
+        }
+
+        .body {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            background: white;
+        }
+
+        .app-title {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            text-transform: uppercase;
+        }
+
+        .order-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: blue;
+        }
+
+        .w-100 {
+            width: 100%;
+        }
+
+        .input-text,
+        .short-input-text {
+            width: 100%;
+            border: none;
+            border-bottom: 1px solid transparent;
+            outline: none;
+            padding-top: 6px;
+            padding-bottom: 6px;
+        }
+
+        .input-text:hover,
+        .input-text:focus,
+        .short-input-text:hover,
+        .short-input-text:focus {
+            border-bottom: 1px solid gray;
+        }
+
+        .short-input-text {
+            width: 30%;
+        }
+
+        .site-name {
+            font-weight: bold;
+        }
+
+        .site-url {
+            color: green;
+        }
+
+        .account {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .content {
+            overflow: hidden;
+            flex: 1;
+            height: 0;
+        }
+
+        .content-scroll {
+            padding-left: 12px;
+            padding-right: 12px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        .control-button {
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            column-gap: 8px;
+        }
+
+        #error {
+            padding: 10px;
+            color: red;
+        }
+
+        @media screen and (max-width: 768px) {
+            .short-input-text {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    {{{body}}}
+</body>
+
+</html>

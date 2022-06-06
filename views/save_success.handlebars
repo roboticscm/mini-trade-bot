@@ -1,0 +1,13 @@
+Save successful!
+<div id="status"></div>
+<script>
+    let count = 6;
+    const timer = setInterval(() => {
+        count--;
+        document.querySelector('#status').innerHTML = `Redirect to home page in ${count} ${count > 1 ? 'seconds' : 'second'}.`
+        if(count < 1) {
+            clearInterval(timer);
+            location.href='/';
+        }
+    }, 1000);
+</script>
